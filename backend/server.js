@@ -1,10 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { fetchSocialPosts } from './services/scraperService.js';
 import { processPost, clusterPosts, translatePost } from './services/geminiService.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -168,6 +173,14 @@ app.get('/api/stats', (req, res) => {
   });
 
   res.json(stats);
+});
+
+// Serve static assets from frontend build folder
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Fallback all other routes to frontend's index.html for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // Start the server

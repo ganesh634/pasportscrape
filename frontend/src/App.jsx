@@ -4,7 +4,9 @@ import FiltersBar from './components/FiltersBar';
 import PostCard from './components/PostCard';
 import { exportToCSV, exportToPDF } from './utils/export';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE = window.location.origin.includes('localhost:5173')
+  ? 'http://localhost:5000/api'
+  : '/api';
 
 export default function App() {
   const [posts, setPosts] = useState([]);
